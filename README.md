@@ -6,7 +6,7 @@ Simple plugin for toggling weapon viewmodel visibility in CSGO *untested for oth
 2. Either change maps or do `sm plugins load HideViewmodel` to load the plugin
 
 ## Changelogs
-#### 1.0.0
+### 1.0.0
 - Initial commit and adding files
 
 ## Additional Information
