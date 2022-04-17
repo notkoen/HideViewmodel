@@ -1,5 +1,4 @@
 #include <sourcemod>
-#include <clientprefs>
 #include <csgocolors_fix>
 
 #pragma semicolon 1
@@ -7,7 +6,6 @@
 
 bool g_bHideViewmodel[MAXPLAYERS + 1] = {false, ...};
 ConVar g_cvar_Enable_HideViewmodel;
-Handle g_hClientViewmodelCookie = INVALID_HANDLE;
 
 public Plugin myinfo =
 {
@@ -29,27 +27,9 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_viewmodel", Toggle_Viewmodel, "Toggle viewmodel visibility");
 	RegConsoleCmd("sm_hideviewmodel", Toggle_Viewmodel, "Toggle viewmodel visibility");
 	RegConsoleCmd("sm_hidevm", Toggle_Viewmodel, "Toggle viewmodel visibility");
-	
-	g_hClientViewmodelCookie = RegClientCookie("viewmodel_cookie", "Cookie to check if viewmodel is disabled", CookieAccess_Private);
-	
-	for (int i=MaxClients; i>0; --i)
-	{
-		if (!AreClientCookiesCached(i))
-		{
-			continue;
-		}
-		OnClientCookiesCached(i);
-	}
 }
 
-public void OnClientCookiesCached(int client)
-{
-	char sValue[8];
-	GetClientCookie(client, g_hClientViewmodelCookie, sValue, sizeof(sValue));
-	
-	g_bHideViewmodel[client] = (sValue[0] != '\0' && StringToInt(sValue));
-}
-
+// IsValidClient Check
 bool IsValidClient(int client, bool bAllowBots = true, bool bAllowDead = true)
 {
 	if(!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
@@ -76,13 +56,11 @@ public Action Toggle_Viewmodel(int client, int args)
 		if(g_bHideViewmodel[client])
 		{
 			CPrintToChat(client, "%t", "Viewmodel Hidden", "Plugin Tag");
-			SetClientCookie(client, g_hClientViewmodelCookie, "0");
 			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", false);
 		}
 		else
 		{
 			CPrintToChat(client, "%t", "Viewmodel Unhidden", "Plugin Tag");
-			SetClientCookie(client, g_hClientViewmodelCookie, "1");
 			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", true);
 		}
 		return Plugin_Handled;
