@@ -1,7 +1,6 @@
 # Simple Hide Viewmodel
 **Compiled in SM 1.11.6869**
 
-Simple plugin for toggling weapon viewmodel visibility in CSGO (*untested for other games*)
 Simple plugin for toggling weapon viewmodel visibility in CSGO. There is a convar for enabling and disabling the hide viewmodel commands.
 
 ## Credits:
